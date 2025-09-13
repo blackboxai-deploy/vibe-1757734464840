@@ -1,0 +1,887 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Factores Históricos y Políticos - Presentación Interactiva</title>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700;900&family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%);
+            min-height: 100vh;
+            overflow: hidden;
+            color: white;
+        }
+
+        .presentation-container {
+            position: relative;
+            width: 100vw;
+            height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .slide {
+            position: absolute;
+            width: 90%;
+            max-width: 1200px;
+            height: 85%;
+            background: rgba(255, 255, 255, 0.95);
+            color: #1a1a2e;
+            border-radius: 20px;
+            box-shadow: 0 25px 80px rgba(0, 0, 0, 0.3);
+            opacity: 0;
+            transform: translateX(100px);
+            transition: all 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            padding: 60px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            backdrop-filter: blur(10px);
+        }
+
+        .slide.active {
+            opacity: 1;
+            transform: translateX(0);
+        }
+
+        .slide.prev {
+            transform: translateX(-100px);
+        }
+
+        .slide h1 {
+            font-family: 'Playfair Display', serif;
+            font-size: 3.5rem;
+            font-weight: 900;
+            margin-bottom: 30px;
+            background: linear-gradient(135deg, #d4af37, #b8860b);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            line-height: 1.2;
+        }
+
+        .slide h2 {
+            font-family: 'Playfair Display', serif;
+            font-size: 2.8rem;
+            font-weight: 700;
+            margin-bottom: 25px;
+            color: #16213e;
+            line-height: 1.3;
+        }
+
+        .slide h3 {
+            font-size: 1.6rem;
+            font-weight: 600;
+            margin-bottom: 20px;
+            color: #0f3460;
+        }
+
+        .slide p {
+            font-size: 1.3rem;
+            line-height: 1.7;
+            margin-bottom: 25px;
+            max-width: 900px;
+            font-weight: 400;
+            color: #333;
+        }
+
+        .slide-number {
+            position: absolute;
+            top: 30px;
+            right: 40px;
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: #666;
+        }
+
+        .date-badge {
+            background: linear-gradient(135deg, #d4af37, #b8860b);
+            color: white;
+            padding: 10px 25px;
+            border-radius: 50px;
+            font-size: 1.2rem;
+            font-weight: 600;
+            margin-bottom: 30px;
+            box-shadow: 0 10px 25px rgba(212, 175, 55, 0.3);
+        }
+
+        .highlight-box {
+            background: linear-gradient(135deg, #16213e, #0f3460);
+            color: white;
+            padding: 30px;
+            border-radius: 15px;
+            margin: 30px 0;
+            box-shadow: 0 15px 35px rgba(22, 33, 62, 0.3);
+        }
+
+        .highlight-box h4 {
+            font-size: 1.4rem;
+            font-weight: 700;
+            margin-bottom: 15px;
+            color: #d4af37;
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 25px;
+            margin: 30px 0;
+        }
+
+        .stat-item {
+            background: linear-gradient(135deg, rgba(212, 175, 55, 0.1), rgba(184, 134, 11, 0.1));
+            padding: 25px;
+            border-radius: 15px;
+            border-left: 5px solid #d4af37;
+        }
+
+        .stat-number {
+            font-size: 2.5rem;
+            font-weight: 900;
+            color: #d4af37;
+            line-height: 1;
+        }
+
+        .stat-label {
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: #16213e;
+            margin-top: 5px;
+        }
+
+        .navigation {
+            position: fixed;
+            bottom: 40px;
+            left: 50%;
+            transform: translateX(-50%);
+            display: flex;
+            gap: 15px;
+            z-index: 1000;
+        }
+
+        .nav-btn {
+            background: rgba(255, 255, 255, 0.9);
+            border: none;
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: #16213e;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+            transition: all 0.3s ease;
+            backdrop-filter: blur(10px);
+        }
+
+        .nav-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.3);
+            background: rgba(212, 175, 55, 0.9);
+            color: white;
+        }
+
+        .nav-btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .progress-bar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            height: 5px;
+            background: linear-gradient(90deg, #d4af37, #b8860b);
+            transition: width 0.6s ease;
+            z-index: 1000;
+        }
+
+        .slide-counter {
+            position: fixed;
+            top: 30px;
+            left: 40px;
+            background: rgba(255, 255, 255, 0.9);
+            padding: 15px 25px;
+            border-radius: 50px;
+            font-weight: 600;
+            color: #16213e;
+            font-size: 1.1rem;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+            backdrop-filter: blur(10px);
+            z-index: 1000;
+        }
+
+        .intro-slide {
+            background: linear-gradient(135deg, #1a1a2e, #16213e, #0f3460);
+            color: white;
+        }
+
+        .intro-slide h1 {
+            font-size: 4.5rem;
+            margin-bottom: 40px;
+            text-shadow: 0 10px 25px rgba(0, 0, 0, 0.5);
+        }
+
+        .intro-slide .subtitle {
+            font-size: 1.8rem;
+            font-weight: 300;
+            opacity: 0.9;
+            margin-bottom: 50px;
+        }
+
+        .impact-list {
+            list-style: none;
+            padding: 0;
+            text-align: left;
+            max-width: 800px;
+        }
+
+        .impact-list li {
+            background: rgba(212, 175, 55, 0.1);
+            margin: 15px 0;
+            padding: 20px;
+            border-radius: 10px;
+            border-left: 4px solid #d4af37;
+            font-size: 1.2rem;
+            line-height: 1.6;
+        }
+
+        .timeline-item {
+            background: linear-gradient(135deg, rgba(22, 33, 62, 0.1), rgba(15, 52, 96, 0.1));
+            padding: 25px;
+            margin: 20px 0;
+            border-radius: 15px;
+            border-left: 6px solid #d4af37;
+            text-align: left;
+        }
+
+        .timeline-year {
+            font-size: 1.5rem;
+            font-weight: 900;
+            color: #d4af37;
+            margin-bottom: 10px;
+        }
+
+        .conclusion-slide {
+            background: linear-gradient(135deg, #0f3460, #16213e, #1a1a2e);
+            color: white;
+        }
+
+        .conclusion-slide h2 {
+            color: #d4af37;
+            margin-bottom: 40px;
+        }
+
+        @keyframes slideInUp {
+            from {
+                opacity: 0;
+                transform: translateY(50px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .slide.active * {
+            animation: slideInUp 0.8s ease-out forwards;
+        }
+
+        @media (max-width: 768px) {
+            .slide {
+                width: 95%;
+                height: 90%;
+                padding: 40px 30px;
+            }
+            
+            .slide h1 {
+                font-size: 2.8rem;
+            }
+            
+            .slide h2 {
+                font-size: 2.2rem;
+            }
+            
+            .slide p {
+                font-size: 1.1rem;
+            }
+            
+            .stats-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .nav-btn {
+                width: 50px;
+                height: 50px;
+                font-size: 1.2rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="progress-bar" id="progressBar"></div>
+    <div class="slide-counter" id="slideCounter">1 / 15</div>
+    
+    <div class="presentation-container" id="presentationContainer">
+        <!-- Slide 1: Portada -->
+        <div class="slide active intro-slide" data-slide="1">
+            <div class="slide-number">1/15</div>
+            <h1>Factores Históricos y Políticos</h1>
+            <p class="subtitle">Una exploración de los eventos que han moldeado nuestro mundo moderno</p>
+            <div class="date-badge">Presentación Interactiva 2024</div>
+        </div>
+
+        <!-- Slide 2: Introducción -->
+        <div class="slide" data-slide="2">
+            <div class="slide-number">2/15</div>
+            <h2>¿Qué son los Factores Históricos y Políticos?</h2>
+            <p>Los factores históricos y políticos son eventos, procesos y decisiones que han influenciado profundamente el desarrollo de las sociedades humanas.</p>
+            <div class="highlight-box">
+                <h4>Características Principales:</h4>
+                <ul class="impact-list">
+                    <li><strong>Transformación Social:</strong> Cambios en las estructuras sociales y culturales</li>
+                    <li><strong>Reconfiguración Política:</strong> Nuevas formas de gobierno y poder</li>
+                    <li><strong>Impacto Económico:</strong> Alteraciones en los sistemas económicos globales</li>
+                    <li><strong>Legado Duradero:</strong> Consecuencias que perduran hasta nuestros días</li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- Slide 3: Revolución Francesa -->
+        <div class="slide" data-slide="3">
+            <div class="slide-number">3/15</div>
+            <div class="date-badge">1789 - 1799</div>
+            <h2>La Revolución Francesa</h2>
+            <h3>"Liberté, Égalité, Fraternité"</h3>
+            <p>La Revolución Francesa marcó el fin del Antiguo Régimen y el nacimiento de la democracia moderna. Este evento transformó no solo Francia, sino que inspiró movimientos revolucionarios en todo el mundo.</p>
+            <div class="stats-grid">
+                <div class="stat-item">
+                    <div class="stat-number">10</div>
+                    <div class="stat-label">Años de Revolución</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-number">40,000</div>
+                    <div class="stat-label">Ejecutados en el Terror</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-number">3</div>
+                    <div class="stat-label">Estados que se unieron</div>
+                </div>
+            </div>
+            <div class="highlight-box">
+                <h4>Impacto Global:</h4>
+                <p>Estableció los principios de derechos humanos, separación de poderes y soberanía popular que siguen siendo fundamentales en las democracias modernas.</p>
+            </div>
+        </div>
+
+        <!-- Slide 4: Revolución Industrial -->
+        <div class="slide" data-slide="4">
+            <div class="slide-number">4/15</div>
+            <div class="date-badge">1760 - 1840</div>
+            <h2>Revolución Industrial</h2>
+            <h3>La Gran Transformación Social y Económica</h3>
+            <p>La Revolución Industrial cambió fundamentalmente la forma en que las sociedades producían bienes y se organizaban socialmente, marcando la transición de economías agrarias a industriales.</p>
+            <div class="stats-grid">
+                <div class="stat-item">
+                    <div class="stat-number">80</div>
+                    <div class="stat-label">Años de Transformación</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-number">300%</div>
+                    <div class="stat-label">Aumento Población Urbana</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-number">1769</div>
+                    <div class="stat-label">Máquina de Vapor (Watt)</div>
+                </div>
+            </div>
+            <div class="timeline-item">
+                <div class="timeline-year">Consecuencias</div>
+                <p>Surgimiento de la clase trabajadora, urbanización masiva, nuevos sistemas de transporte, y las bases del capitalismo moderno.</p>
+            </div>
+        </div>
+
+        <!-- Slide 5: Primera Guerra Mundial -->
+        <div class="slide" data-slide="5">
+            <div class="slide-number">5/15</div>
+            <div class="date-badge">1914 - 1918</div>
+            <h2>Primera Guerra Mundial</h2>
+            <h3>La Gran Guerra que Reconfiguró el Mundo</h3>
+            <p>El primer conflicto global moderno que involucró a las principales potencias mundiales, causando una destrucción sin precedentes y redibujando el mapa político mundial.</p>
+            <div class="stats-grid">
+                <div class="stat-item">
+                    <div class="stat-number">37</div>
+                    <div class="stat-label">Millones de Víctimas</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-number">32</div>
+                    <div class="stat-label">Países Involucrados</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-number">4</div>
+                    <div class="stat-label">Imperios Desaparecieron</div>
+                </div>
+            </div>
+            <div class="highlight-box">
+                <h4>Cambios Geopolíticos:</h4>
+                <p>Caída de los imperios Otomano, Austro-Húngaro, Alemán y Ruso. Surgimiento de nuevas naciones y el declive de Europa como centro mundial.</p>
+            </div>
+        </div>
+
+        <!-- Slide 6: Gran Depresión -->
+        <div class="slide" data-slide="6">
+            <div class="slide-number">6/15</div>
+            <div class="date-badge">1929 - 1939</div>
+            <h2>La Gran Depresión</h2>
+            <h3>Crisis Económica Global</h3>
+            <p>La crisis económica más severa del siglo XX, que comenzó con el colapso de Wall Street y se extendió mundialmente, transformando las políticas económicas globales.</p>
+            <div class="stats-grid">
+                <div class="stat-item">
+                    <div class="stat-number">25%</div>
+                    <div class="stat-label">Tasa de Desempleo (EE.UU.)</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-number">-89%</div>
+                    <div class="stat-label">Caída del Dow Jones</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-number">10</div>
+                    <div class="stat-label">Años de Crisis</div>
+                </div>
+            </div>
+            <div class="timeline-item">
+                <div class="timeline-year">New Deal</div>
+                <p>Las políticas de Franklin D. Roosevelt introdujeron el concepto de estado de bienestar y la intervención gubernamental en la economía.</p>
+            </div>
+        </div>
+
+        <!-- Slide 7: Segunda Guerra Mundial -->
+        <div class="slide" data-slide="7">
+            <div class="slide-number">7/15</div>
+            <div class="date-badge">1939 - 1945</div>
+            <h2>Segunda Guerra Mundial</h2>
+            <h3>El Conflicto que Dividió al Mundo</h3>
+            <p>El conflicto más destructivo de la historia humana que involucró a más de 100 millones de personas y resultó en una completa reconfiguración del orden mundial.</p>
+            <div class="stats-grid">
+                <div class="stat-item">
+                    <div class="stat-number">75</div>
+                    <div class="stat-label">Millones de Víctimas</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-number">50</div>
+                    <div class="stat-label">Países Participantes</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-number">6</div>
+                    <div class="stat-label">Años de Guerra</div>
+                </div>
+            </div>
+            <div class="highlight-box">
+                <h4>Consecuencias Políticas:</h4>
+                <p>Surgimiento de EE.UU. y la URSS como superpotencias, creación de la ONU, inicio de la descolonización y el establecimiento de un nuevo orden bipolar.</p>
+            </div>
+        </div>
+
+        <!-- Slide 8: Guerra Fría -->
+        <div class="slide" data-slide="8">
+            <div class="slide-number">8/15</div>
+            <div class="date-badge">1945 - 1991</div>
+            <h2>Guerra Fría</h2>
+            <h3>Bipolarización Ideológica Mundial</h3>
+            <p>Período de tensión geopolítica entre las superpotencias EE.UU. y URSS que dividió al mundo en dos bloques ideológicos antagónicos sin llegar a un conflicto directo.</p>
+            <div class="stats-grid">
+                <div class="stat-item">
+                    <div class="stat-number">46</div>
+                    <div class="stat-label">Años de Tensión</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-number">2</div>
+                    <div class="stat-label">Bloques Principales</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-number">100+</div>
+                    <div class="stat-label">Conflictos Proxy</div>
+                </div>
+            </div>
+            <ul class="impact-list">
+                <li><strong>Carrera Armamentista:</strong> Desarrollo de armas nucleares y espaciales</li>
+                <li><strong>División de Alemania:</strong> Símbolo de la división mundial</li>
+                <li><strong>Movimiento de No Alineados:</strong> Países que rechazaron ambos bloques</li>
+            </ul>
+        </div>
+
+        <!-- Slide 9: Descolonización -->
+        <div class="slide" data-slide="9">
+            <div class="slide-number">9/15</div>
+            <div class="date-badge">1945 - 1975</div>
+            <h2>Proceso de Descolonización</h2>
+            <h3>El Nacimiento de Nuevas Naciones</h3>
+            <p>Proceso histórico mediante el cual las colonias europeas en África, Asia y América obtuvieron su independencia, transformando radicalmente el mapa político mundial.</p>
+            <div class="stats-grid">
+                <div class="stat-item">
+                    <div class="stat-number">100+</div>
+                    <div class="stat-label">Nuevos Estados</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-number">30</div>
+                    <div class="stat-label">Años de Proceso</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-number">2</div>
+                    <div class="stat-label">Billones de Personas Liberadas</div>
+                </div>
+            </div>
+            <div class="timeline-item">
+                <div class="timeline-year">Hitos Principales</div>
+                <p>Independencia de India (1947), Ghana (1957), año de África (1960), y el fin del Apartheid en Sudáfrica (1994).</p>
+            </div>
+        </div>
+
+        <!-- Slide 10: Caída del Muro de Berlín -->
+        <div class="slide" data-slide="10">
+            <div class="slide-number">10/15</div>
+            <div class="date-badge">9 de Noviembre, 1989</div>
+            <h2>Caída del Muro de Berlín</h2>
+            <h3>El Fin de la División Mundial</h3>
+            <p>Evento simbólico que marcó el fin de la Guerra Fría y el colapso del bloque socialista, permitiendo la reunificación alemana y el fin de la bipolarización mundial.</p>
+            <div class="stats-grid">
+                <div class="stat-item">
+                    <div class="stat-number">28</div>
+                    <div class="stat-label">Años de División</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-number">155</div>
+                    <div class="stat-label">Km de Longitud</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-number">5000</div>
+                    <div class="stat-label">Personas Escaparon</div>
+                </div>
+            </div>
+            <div class="highlight-box">
+                <h4>Impacto Global:</h4>
+                <p>Reunificación alemana, colapso de la URSS, democratización de Europa del Este, y el surgimiento de un mundo unipolar bajo hegemonía estadounidense.</p>
+            </div>
+        </div>
+
+        <!-- Slide 11: Globalización -->
+        <div class="slide" data-slide="11">
+            <div class="slide-number">11/15</div>
+            <div class="date-badge">1990s - 2000s</div>
+            <h2>Era de la Globalización</h2>
+            <h3>Interconexión Mundial Sin Precedentes</h3>
+            <p>Proceso de integración mundial en los aspectos económicos, políticos, tecnológicos, sociales y culturales, facilitado por avances en comunicaciones y transporte.</p>
+            <div class="stats-grid">
+                <div class="stat-item">
+                    <div class="stat-number">400%</div>
+                    <div class="stat-label">Aumento Comercio Global</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-number">194</div>
+                    <div class="stat-label">Países Interconectados</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-number">3.8B</div>
+                    <div class="stat-label">Usuarios de Internet</div>
+                </div>
+            </div>
+            <ul class="impact-list">
+                <li><strong>Libre Comercio:</strong> Eliminación de barreras comerciales</li>
+                <li><strong>Corporaciones Multinacionales:</strong> Empresas con alcance global</li>
+                <li><strong>Cultura Global:</strong> Intercambio cultural sin precedentes</li>
+                <li><strong>Migración:</strong> Movimiento masivo de personas</li>
+            </ul>
+        </div>
+
+        <!-- Slide 12: Revolución Digital -->
+        <div class="slide" data-slide="12">
+            <div class="slide-number">12/15</div>
+            <div class="date-badge">2000s - Presente</div>
+            <h2>Revolución Digital</h2>
+            <h3>La Era de la Información y Conectividad</h3>
+            <p>Transformación radical de la sociedad mediante la adopción masiva de tecnologías digitales, cambiando la forma de comunicarnos, trabajar y vivir.</p>
+            <div class="stats-grid">
+                <div class="stat-item">
+                    <div class="stat-number">5B</div>
+                    <div class="stat-label">Usuarios de Internet</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-number">6.8B</div>
+                    <div class="stat-label">Suscripciones Móviles</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-number">4.6B</div>
+                    <div class="stat-label">Usuarios Redes Sociales</div>
+                </div>
+            </div>
+            <div class="timeline-item">
+                <div class="timeline-year">Hitos Digitales</div>
+                <p>Internet comercial (1990s), Redes sociales (2000s), Smartphones (2007), Big Data e IA (2010s), Blockchain y metaverso (2020s).</p>
+            </div>
+        </div>
+
+        <!-- Slide 13: Crisis del Siglo XXI -->
+        <div class="slide" data-slide="13">
+            <div class="slide-number">13/15</div>
+            <div class="date-badge">2001 - Presente</div>
+            <h2>Crisis del Siglo XXI</h2>
+            <h3>Nuevos Desafíos Globales</h3>
+            <p>El nuevo siglo ha traído desafíos sin precedentes que requieren respuestas globales coordinadas, desde terrorismo hasta pandemias y cambio climático.</p>
+            <div class="stats-grid">
+                <div class="stat-item">
+                    <div class="stat-number">2001</div>
+                    <div class="stat-label">11 de Septiembre</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-number">2008</div>
+                    <div class="stat-label">Crisis Financiera</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-number">2020</div>
+                    <div class="stat-label">Pandemia COVID-19</div>
+                </div>
+            </div>
+            <ul class="impact-list">
+                <li><strong>Terrorismo Global:</strong> Nuevas amenazas asimétricas</li>
+                <li><strong>Crisis Climática:</strong> Calentamiento global y sostenibilidad</li>
+                <li><strong>Desigualdad:</strong> Creciente brecha social y económica</li>
+                <li><strong>Migración:</strong> Desplazamientos masivos de población</li>
+            </ul>
+        </div>
+
+        <!-- Slide 14: Impacto Contemporáneo -->
+        <div class="slide" data-slide="14">
+            <div class="slide-number">14/15</div>
+            <div class="date-badge">2020 - 2024</div>
+            <h2>Factores Políticos Contemporáneos</h2>
+            <h3>El Mundo Actual en Transformación</h3>
+            <p>Los eventos actuales continúan moldeando el panorama geopolítico mundial, con nuevos actores y desafíos que redefinen las relaciones internacionales.</p>
+            <div class="stats-grid">
+                <div class="stat-item">
+                    <div class="stat-number">195</div>
+                    <div class="stat-label">Estados Soberanos</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-number">8B</div>
+                    <div class="stat-label">Población Mundial</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-number">100+</div>
+                    <div class="stat-label">Conflictos Activos</div>
+                </div>
+            </div>
+            <div class="highlight-box">
+                <h4>Tendencias Actuales:</h4>
+                <p>Multipolaridad emergente con China y otras potencias, populismo y nacionalismo, revolución tecnológica con IA, y crisis climática como factor geopolítico.</p>
+            </div>
+        </div>
+
+        <!-- Slide 15: Conclusiones -->
+        <div class="slide conclusion-slide" data-slide="15">
+            <div class="slide-number">15/15</div>
+            <h2>Conclusiones y Reflexiones</h2>
+            <h3>Lecciones de la Historia para el Futuro</h3>
+            <p>Los factores históricos y políticos nos enseñan que el cambio es la única constante. Cada época enfrenta sus propios desafíos, pero las lecciones del pasado nos guían hacia un futuro más consciente.</p>
+            <ul class="impact-list">
+                <li><strong>Interconexión:</strong> Los eventos locales tienen impacto global</li>
+                <li><strong>Adaptación:</strong> Las sociedades exitosas se adaptan al cambio</li>
+                <li><strong>Memoria Histórica:</strong> Recordar el pasado previene errores futuros</li>
+                <li><strong>Participación:</strong> La ciudadanía activa es clave para la democracia</li>
+                <li><strong>Cooperación:</strong> Los desafíos globales requieren soluciones globales</li>
+            </ul>
+            <div class="date-badge">Gracias por su atención</div>
+        </div>
+    </div>
+
+    <div class="navigation">
+        <button class="nav-btn" id="prevBtn" onclick="prevSlide()">‹</button>
+        <button class="nav-btn" id="playBtn" onclick="toggleAutoplay()">▶</button>
+        <button class="nav-btn" id="nextBtn" onclick="nextSlide()">›</button>
+    </div>
+
+    <script>
+        let currentSlide = 1;
+        const totalSlides = 15;
+        let autoplayInterval = null;
+        let isAutoplay = false;
+
+        function updateSlideCounter() {
+            document.getElementById('slideCounter').textContent = `${currentSlide} / ${totalSlides}`;
+        }
+
+        function updateProgressBar() {
+            const progress = (currentSlide / totalSlides) * 100;
+            document.getElementById('progressBar').style.width = `${progress}%`;
+        }
+
+        function showSlide(n) {
+            const slides = document.querySelectorAll('.slide');
+            
+            if (n > totalSlides) currentSlide = 1;
+            if (n < 1) currentSlide = totalSlides;
+            
+            slides.forEach(slide => {
+                slide.classList.remove('active', 'prev');
+            });
+            
+            const activeSlide = document.querySelector(`[data-slide="${currentSlide}"]`);
+            if (activeSlide) {
+                activeSlide.classList.add('active');
+            }
+            
+            updateSlideCounter();
+            updateProgressBar();
+            updateNavigationButtons();
+        }
+
+        function updateNavigationButtons() {
+            document.getElementById('prevBtn').disabled = currentSlide === 1;
+            document.getElementById('nextBtn').disabled = currentSlide === totalSlides;
+        }
+
+        function nextSlide() {
+            if (currentSlide < totalSlides) {
+                currentSlide++;
+                showSlide(currentSlide);
+            }
+        }
+
+        function prevSlide() {
+            if (currentSlide > 1) {
+                currentSlide--;
+                showSlide(currentSlide);
+            }
+        }
+
+        function toggleAutoplay() {
+            const playBtn = document.getElementById('playBtn');
+            
+            if (!isAutoplay) {
+                autoplayInterval = setInterval(() => {
+                    if (currentSlide < totalSlides) {
+                        nextSlide();
+                    } else {
+                        stopAutoplay();
+                    }
+                }, 10000);
+                
+                playBtn.textContent = '⏸';
+                isAutoplay = true;
+            } else {
+                stopAutoplay();
+            }
+        }
+
+        function stopAutoplay() {
+            if (autoplayInterval) {
+                clearInterval(autoplayInterval);
+                autoplayInterval = null;
+            }
+            document.getElementById('playBtn').textContent = '▶';
+            isAutoplay = false;
+        }
+
+        function goToSlide(n) {
+            currentSlide = n;
+            showSlide(currentSlide);
+        }
+
+        // Keyboard navigation
+        document.addEventListener('keydown', (e) => {
+            switch(e.key) {
+                case 'ArrowRight':
+                case ' ':
+                    e.preventDefault();
+                    nextSlide();
+                    break;
+                case 'ArrowLeft':
+                    e.preventDefault();
+                    prevSlide();
+                    break;
+                case 'Home':
+                    e.preventDefault();
+                    goToSlide(1);
+                    break;
+                case 'End':
+                    e.preventDefault();
+                    goToSlide(totalSlides);
+                    break;
+                case 'Escape':
+                    stopAutoplay();
+                    break;
+            }
+        });
+
+        // Touch/swipe support for mobile
+        let touchStartX = null;
+        let touchEndX = null;
+
+        document.addEventListener('touchstart', (e) => {
+            touchStartX = e.changedTouches[0].screenX;
+        });
+
+        document.addEventListener('touchend', (e) => {
+            touchEndX = e.changedTouches[0].screenX;
+            handleSwipe();
+        });
+
+        function handleSwipe() {
+            if (!touchStartX || !touchEndX) return;
+            
+            const swipeThreshold = 50;
+            const diff = touchStartX - touchEndX;
+            
+            if (Math.abs(diff) > swipeThreshold) {
+                if (diff > 0) {
+                    nextSlide();
+                } else {
+                    prevSlide();
+                }
+            }
+            
+            touchStartX = null;
+            touchEndX = null;
+        }
+
+        // Initialize presentation
+        document.addEventListener('DOMContentLoaded', () => {
+            showSlide(1);
+            
+            // Add click handlers for slides (optional - for quick navigation)
+            document.querySelectorAll('.slide').forEach((slide, index) => {
+                slide.addEventListener('click', (e) => {
+                    if (e.target === slide) {
+                        nextSlide();
+                    }
+                });
+            });
+        });
+
+        // Prevent context menu for better presentation experience
+        document.addEventListener('contextmenu', (e) => {
+            e.preventDefault();
+        });
+
+        // Handle window resize
+        window.addEventListener('resize', () => {
+            // Recalculate any responsive elements if needed
+            updateProgressBar();
+        });
+    </script>
+</body>
+</html>
